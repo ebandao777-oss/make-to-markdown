@@ -1,12 +1,20 @@
 ---
-AIGC:
-    Label: "1"
-    ContentProducer: 001191440300708461136T1XGW3
-    ProduceID: f114db32c8f49bbd4c4c544cd9de808d_a9e3f2f6673011f1a0095254002afed2
-    ReservedCode1: Lt7UGPTbZtvgFUXl3/UG/YHhedQE04tUeJYFt1GcChiSV1wjeTXGF9iagLqHAL087HrVWh0jDT7Cf0YTKArm4Al68DUQtPvc7zCdflUA+z8NqCRTtge+86axzkjMrt80b52Qxxwg4BrhfZxxlcLsg8gfxxhiMLX4yoAdA8h+ZkKR39YweV5uB+H+TwU=
-    ContentPropagator: 001191440300708461136T1XGW3
-    PropagateID: f114db32c8f49bbd4c4c544cd9de808d_a9e3f2f6673011f1a0095254002afed2
-    ReservedCode2: Lt7UGPTbZtvgFUXl3/UG/YHhedQE04tUeJYFt1GcChiSV1wjeTXGF9iagLqHAL087HrVWh0jDT7Cf0YTKArm4Al68DUQtPvc7zCdflUA+z8NqCRTtge+86axzkjMrt80b52Qxxwg4BrhfZxxlcLsg8gfxxhiMLX4yoAdA8h+ZkKR39YweV5uB+H+TwU=
+name: make-to-markdown
+description: 工业级RAG Markdown物料生成技能，使用 markitdown 将各类文档和文件转换为 Markdown 格式。支持 .doc/.ppt 老格式自动预处理（Word/PowerPoint COM / LibreOffice）。启动时自动检测 OS/版本/能力，按平台选择最佳执行路径。触发词：转 Markdown / 转换文档 / markitdown / 文档转 md / 批量转换。当需要将 PDF、Word (.docx/.doc)、PowerPoint (.pptx/.ppt)、Excel (.xlsx, .xls)、HTML、CSV、JSON、XML、图片（含 EXIF/OCR）、音频（含语音转写）、ZIP 压缩包、YouTube 链接或 EPub 电子书转换为 Markdown 格式，为知识库提供统一的"通用语言"时触发此技能。
+version: "3.6"
+metadata:
+  domain: "make-to-markdown"
+  author: "智慧半岛"
+  platform:
+    windows: full
+    linux: full
+    macos: full
+  openclaw:
+    requires:
+      bins:
+        - uv
+        - python
+    emoji: "📚"
 ---
 
 
