@@ -28,6 +28,8 @@ import shutil
 from pathlib import Path
 from typing import Optional, Tuple, List, Dict
 
+VERSION = "3.6"
+
 # ── 启动时平台检测 ──
 try:
     from platform_detect import detect as _platform_detect, best_office_tool
@@ -730,6 +732,8 @@ def main():
     parser.add_argument('--output', '-o', default=None, help='输出文件路径')
     parser.add_argument('--no-summary', action='store_true', help='跳过文档摘要')
     parser.add_argument('--quiet', '-q', action='store_true', help='静默模式')
+    parser.add_argument('--version', '-V', action='version',
+                        version=f'Make-to-Markdown convert.py v{VERSION}')
     args = parser.parse_args()
 
     input_path = args.input
