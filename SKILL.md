@@ -1,7 +1,7 @@
 ---
 name: make-to-markdown
 description: 工业级RAG Markdown物料生成技能，使用 markitdown 将各类文档和文件转换为 Markdown 格式。支持 .doc/.ppt 老格式自动预处理（Word/PowerPoint COM / LibreOffice）。启动时自动检测 OS/版本/能力，按平台选择最佳执行路径。触发词：转 Markdown / 转换文档 / markitdown / 文档转 md / 批量转换。当需要将 PDF、Word (.docx/.doc)、PowerPoint (.pptx/.ppt)、Excel (.xlsx, .xls)、HTML、CSV、JSON、XML、图片（含 EXIF/OCR）、音频（含语音转写）、ZIP 压缩包、YouTube 链接或 EPub 电子书转换为 Markdown 格式，为知识库提供统一的"通用语言"时触发此技能。
-version: "1.0.10"
+version: "1.0.11"
 metadata:
   domain: "make-to-markdown"
   author: "智慧半岛"
@@ -55,6 +55,24 @@ metadata:
 | 降级兜底 | 失败时自动切换 python-docx/openpyxl/python-pptx |
 | 后置清洗 | 内联执行：去水印+页码+标题修复+表格补全+摘要注入 |
 | 结果反馈 | 输出路径 + H 标题统计 + 表格计数 + 转换方式 |
+
+## 1.1 Init-Step-Poll 渐进式防卡死协议
+
+单个小文件可直接调用 `scripts/convert.py`。批量转换、大文件、网络驱动器文件、旧格式 `.doc/.ppt`、含 OCR/音频/ZIP 的慢转换任务，必须采用 Init → Step → Poll 渐进式执行，避免长时间转换卡死或失败文件被静默吞掉。
+
+| 阶段 | 动作 | 输出 | 失败回退 |
+|:---|:---|:---|:---|
+| Init | 确认源路径、输出路径、格式过滤、文件数量、覆盖策略和平台能力 | `task_id`、待转换清单、输出目录、进度 `0/N` | 路径不可达、输出覆盖未授权、旧格式环境缺失时暂停 |
+| Step | 每次只转换 1 个文件或 1 个小批次，执行 `convert.py`/`batch_convert.py` 并立即做 V1-V6 检查 | 成功文件、失败文件、输出路径、质量检查结果 | 单文件失败写入失败清单，不影响其他文件；加密文件不重试 |
+| Poll | 汇总成功/失败/待处理数量、最近失败原因和可续跑命令 | `running/success/failed/paused`、进度百分比、失败清单、待确认项 | 中断后从失败清单和未处理清单续跑，不重复转换已验证输出 |
+
+执行约束：
+
+- Init 阶段必须显示待转换数量和限定格式；禁止未确认就递归整个目录。
+- Step 阶段不得覆盖已有输出，除非用户已在 Init 阶段明确授权。
+- Poll 阶段完成度只能按“已通过 V1-V6 的输出文件数 / 待转换文件数”计算。
+- 批量任务必须保留 `_conversion_errors.log` 或等价失败清单，最终回复需列出失败文件和下一步处理建议。
+- 网络驱动器或路径含空格时优先使用 Python/pathlib 路径处理，不依赖 PowerShell 字符串拼接。
 
 ## 2. 依赖速查
 
